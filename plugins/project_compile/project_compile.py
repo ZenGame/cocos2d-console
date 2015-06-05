@@ -603,6 +603,8 @@ class CCPluginCompile(cocos.CCPlugin):
             raise cocos.CCPluginError(message)
 
         commandPath = os.path.join(vsPath, "Common7", "IDE", "devenv")
+        commandPath=commandPath.replace("Program Files","\"Program Files\"")
+        commandPath=commandPath.replace("Microsoft Visual Studio 12.0","\"Microsoft Visual Studio 12.0\"")
         build_mode = 'Debug' if self._is_debug_mode() else 'Release'
 
         # upgrade projects
@@ -616,7 +618,7 @@ class CCPluginCompile(cocos.CCPlugin):
 
         # build the project
         commands = ' '.join([
-            "\"%s\"" % commandPath,
+            "%s" % commandPath,
             "\"%s\"" % projectPath,
             "/Build \"%s|Win32\"" % build_mode,
             "/Project \"%s\"" % self.project_name

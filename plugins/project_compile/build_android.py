@@ -180,6 +180,8 @@ class AndroidBuilder(object):
         ndk_path = os.path.join(ndk_root, "ndk-build")
         module_paths = [os.path.join(app_android_root, path) for path in self.ndk_module_paths]
 
+        #module_paths = [os.path.join(os.environ['cocos2dx'], path) for path in self.ndk_module_paths]
+
         # windows should use ";" to seperate module paths
         if cocos.os_is_win32():
             ndk_module_path = ';'.join(module_paths)
@@ -270,6 +272,7 @@ class AndroidBuilder(object):
         return ret
 
     def do_build_apk(self, sdk_root, ant_root, android_platform, build_mode, output_dir, custom_step_args):
+        cocos.Logging.info("building apk11111")
         sdk_tool_path = os.path.join(sdk_root, "tools", "android")
         cocos_root = self.cocos_root
         app_android_root = self.app_android_root
@@ -299,7 +302,9 @@ class AndroidBuilder(object):
         # invoke custom step: pre-ant-build
         self._project.invoke_custom_step_script(cocos_project.Project.CUSTOM_STEP_PRE_ANT_BUILD, target_platform, args_ant_copy)
 
-        command = "%s clean %s -f %s -Dsdk.dir=%s" % (self._convert_path_to_cmd(ant_path), build_mode, buildfile_path, self._convert_path_to_cmd(sdk_root))
+        #command = "%s clean %s -f %s -Dsdk.dir=%s" % (self._convert_path_to_cmd(ant_path), build_mode, buildfile_path, self._convert_path_to_cmd(sdk_root))
+        command = "%s clean %s -f %s -Dsdk.dir=%s" % (ant_path, build_mode, buildfile_path, self._convert_path_to_cmd(sdk_root))
+        #print(command)
         self._run_cmd(command)
 
         # invoke custom step: post-ant-build
