@@ -69,6 +69,7 @@ class CCPluginCompile(cocos.CCPlugin):
         group.add_argument("--app-abi", dest="app_abi", help='Set the APP_ABI of ndk-build. Can be multi value separated with ":".Sample : --app-aib armeabi:x86:mips. Default value is "armeabi".')
         group.add_argument("--ndk-toolchain", dest="toolchain", help='Specify the NDK_TOOLCHAIN of ndk-build.')
         group.add_argument("--ndk-cppflags", dest="cppflags", help='Specify the APP_CPPFLAGS of ndk-build.')
+        group.add_argument("--ndk-no-zen-lua", dest="ndk_no_zen_lua", help='Specify the ndk-build param: NO_ZEN_LUA')
 
         group = parser.add_argument_group("Web Options")
         group.add_argument("--source-map", dest="source_map", action="store_true", help='Enable source-map')
@@ -138,6 +139,11 @@ class CCPluginCompile(cocos.CCPlugin):
             self._jobs = args.jobs
         else:
             self._jobs = self.get_num_of_cpu()
+
+        if args.ndk_no_zen_lua is not None:
+            self.ndk_no_zen_lua = args.ndk_no_zen_lua
+        else:
+            self.ndk_no_zen_lua = False
 
         self._has_sourcemap = args.source_map
         self._web_advanced = args.advanced
@@ -409,6 +415,9 @@ class CCPluginCompile(cocos.CCPlugin):
                 if self.ndk_toolchain:
                     toolchain_param = "NDK_TOOLCHAIN=%s" % self.ndk_toolchain
                     ndk_build_param.append(toolchain_param)
+
+                if self.ndk_no_zen_lua:
+                    ndk_build_param.append("NO_ZEN_LUA=1")
 
                 self._project.invoke_custom_step_script(cocos_project.Project.CUSTOM_STEP_PRE_NDK_BUILD, target_platform, args_ndk_copy)
 

@@ -36,6 +36,7 @@ class AndroidBuilder(object):
         self._parse_cfg()
 
     def _run_cmd(self, command):
+        cocos.Logging.info("_run_cmd: %s" % command)
         cocos.CMDRunner.run_cmd(command, self._verbose)
 
 
